@@ -2,6 +2,7 @@
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import fs from "fs";
 
 // Создание экземпляра приложения Express
 const app = express();
@@ -16,37 +17,17 @@ interface User {
   number: string;
 }
 
-// Массив пользователей из условий тестового задания
-const users: User[] = [
-  {
-    email: "jim@gmail.com",
-    number: "221122",
-  },
-  {
-    email: "jam@gmail.com",
-    number: "830347",
-  },
-  {
-    email: "john@gmail.com",
-    number: "221122",
-  },
-  {
-    email: "jams@gmail.com",
-    number: "349425",
-  },
-  {
-    email: "jams@gmail.com",
-    number: "141424",
-  },
-  {
-    email: "jill@gmail.com",
-    number: "822287",
-  },
-  {
-    email: "jill@gmail.com",
-    number: "822286",
-  },
-];
+let users: User[] = [];
+
+// Загрузка данных из файла users.json
+fs.readFile("users.json", (err, data) => {
+  if (err) {
+    console.error("Failed to read users.json", err);
+    return;
+  }
+
+  users = JSON.parse(data.toString());
+});
 
 // Обработка POST-запроса на эндпоинт "/search"
 app.post("/search", (req: Request, res: Response) => {
